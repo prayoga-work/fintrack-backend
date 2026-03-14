@@ -1,0 +1,73 @@
+// fintrack-backend/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  role         String         @default("Pro Engineer")
+  phone        String?        // Kolom baru untuk profil
+  avatar       String?        @db.Text
+  isVerified   Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  
+  // Relasi Lengkap
+  transactions  Transaction[]
+  goals         Goal[]
+  subscriptions Subscription[]
+  budget        Budget?
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  type        String   
+  amount      Float
+  category    String
+  group       String
+  description String?
+  date        String
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+}
+
+model Goal {
+  id        String   @id @default(uuid())
+  name      String
+  target    Float
+  term      Int
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Budget {
+  id                  String @id @default(uuid())
+  monthlyIncomeTarget Float  @default(0)
+  needsPercentage     Int    @default(50)
+  wantsPercentage     Int    @default(30)
+  savingsPercentage   Int    @default(20)
+  userId              String @unique
+  user                User   @relation(fields: [userId], references: [id])
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  name      String
+  amount    Float
+  dueDate   String
+  category  String
+  isPaid    Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}

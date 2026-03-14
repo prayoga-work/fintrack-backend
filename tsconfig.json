@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* Base Options */
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    /* Strictness */
+    "strict": true,
+    "verbatimModuleSyntax": false, // MATIKAN INI agar tidak error saat import Request/Response
+    "isolatedModules": true,
+    "moduleDetection": "force",
+
+    /* Layout */
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true,
+
+    /* Hindari error type-only import */
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src/**/*"]
+}
