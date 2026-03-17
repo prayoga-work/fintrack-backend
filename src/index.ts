@@ -135,7 +135,8 @@ app.post('/api/goals', authenticateToken, async (req: any, res: Response) => {
   } catch (error: any) { res.status(500).json({ error: error.message }); }
 });
 
-app.delete('/api/goals/:id', authenticate, async (req: any, res: Response) => {
+// 👇 PERBAIKAN DI SINI: authenticate -> authenticateToken 👇
+app.delete('/api/goals/:id', authenticateToken, async (req: any, res: Response) => {
   await prisma.goal.delete({ where: { id: req.params.id, userId: req.user.id } });
   res.json({ message: "Goal dihapus!" });
 });
