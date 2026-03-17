@@ -16,6 +16,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key-fintrack';
 app.use(cors());
 app.use(express.json({ limit: '10mb' })); // Support foto profil besar
 
+// --- ROOT ROUTE (Untuk cek apakah Vercel jalan) ---
+app.get('/', (req: Request, res: Response) => {
+  res.send('🚀 Backend FinTrack API Berjalan Normal di Vercel!');
+});
+
 // --- MIDDLEWARE KEAMANAN ---
 const authenticateToken = (req: any, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
@@ -130,7 +135,7 @@ app.post('/api/goals', authenticateToken, async (req: any, res: Response) => {
   } catch (error: any) { res.status(500).json({ error: error.message }); }
 });
 
-app.delete('/api/goals/:id', authenticateToken, async (req: any, res: Response) => {
+app.delete('/api/goals/:id', authenticate, async (req: any, res: Response) => {
   await prisma.goal.delete({ where: { id: req.params.id, userId: req.user.id } });
   res.json({ message: "Goal dihapus!" });
 });
@@ -195,4 +200,8 @@ app.delete('/api/subscriptions/:id', authenticateToken, async (req: any, res: Re
   res.json({ message: "Sub dihapus!" });
 });
 
-app.listen(PORT, () => console.log(`✅ Server terbang di port: ${PORT}`));
+// Jalankan server untuk testing lokal
+app.listen(PORT, () => console.log(`✅ Akses Servermu di Port ini: ${PORT}`));
+
+// 👇 INI YANG PALING PENTING UNTUK VERCEL 👇
+export default app;
